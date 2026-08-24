@@ -736,7 +736,7 @@ console.log('[EMERGE FLOW] 5. tropical-reveal — system in storage:',
             SAVED && SAVED.system, '| data:', __ok ? 'user birth data' : 'QA fallback');
 console.log('[EMERGE FLOW] 6. calculation branch: TROPICAL — no ayanamsa (true tropical longitudes)');
 document.getElementById('stamp').textContent =
-  'TROPICAL v18.53 fixture+trace WORKING COPY · d1 · data:' + ((SAVED && SAVED.system) || 'none');
+  'TROPICAL v18.54 cusp overlay WORKING COPY · d1 · data:' + ((SAVED && SAVED.system) || 'none');
 
 var DEG = Math.PI/180, RAD = 180/Math.PI;
 
@@ -1323,6 +1323,35 @@ for (var hcu = 0; hcu < 12; hcu++){
   cuspEls.push({ e:le, len:ll });
 }
 
+/* --- v18.54 PLACIDUS CUSP OVERLAY (locked spec) ---
+   The zodiac ring and the twelve equal 30-degree sign sectors above are untouched.
+   When Placidus is active, the twelve unequal house cusps are overlaid as separate
+   radial lines inside the tick band (R_CEN to R_TIN, so they never cross the sign
+   dividers), the four angles (cusps 1, 4, 7, 10 = AC, IC, DC, MC) carry the heavier
+   existing gold + glow treatment, and the house numbers below are positioned at the
+   midpoint of their Placidus sector. On Whole Sign fallback nothing is added here:
+   the existing sector dividers ARE the house boundaries, exactly as before. */
+var R_CEN_OVERLAY = 108;
+if (HOUSE_SYSTEM_USED === 'placidus'){
+  var padGroup = el('g', { 'stroke-linecap':'round' });
+  for (var pc = 1; pc <= 12; pc++){
+    var isAngle = (pc === 1 || pc === 4 || pc === 7 || pc === 10);
+    var pl = HOUSE_CUSPS[pc];
+    var pp1 = pt(pl, R_CEN_OVERLAY), pp2 = pt(pl, isAngle ? R_RING : R_TIN);
+    var pe = el('line', {
+      x1:pp1.x, y1:pp1.y, x2:pp2.x, y2:pp2.y,
+      stroke: isAngle ? '#e8c67a' : '#e0b464',
+      'stroke-width': isAngle ? 3 : 1.5,
+      opacity: isAngle ? 0.95 : 0.6
+    }, padGroup);
+    if (isAngle) pe.setAttribute('filter', 'url(#gold)');
+    var plen = Math.hypot(pp2.x-pp1.x, pp2.y-pp1.y);
+    pe.style.strokeDasharray = plen;
+    pe.style.strokeDashoffset = plen;
+    cuspEls.push({ e:pe, len:plen });
+  }
+}
+
 /* --- faint spokes to the center (like the template's light rays) --- */
 var R_CEN = 108;   // the center circle where the chart names itself
 var spokeGroup = el('g', { stroke:'rgba(224,180,100,0.22)', 'stroke-width':'1.1' });
@@ -1362,7 +1391,13 @@ var R_HNUM = 320;
 var numGroup = el('g', { 'font-family':'Georgia, serif', fill:'#d9a94f', 'text-anchor':'middle' });
 var numEls = [];
 for (var hn = 1; hn <= 12; hn++){
-  var nlon = norm360(SIGN0 + (hn - 1)*30 + 15);
+  var nlon;
+  if (HOUSE_SYSTEM_USED === 'placidus'){
+    var na = HOUSE_CUSPS[hn], nb = HOUSE_CUSPS[hn % 12 + 1];
+    nlon = norm360(na + norm360(nb - na)/2);         /* v18.54: number sits inside its Placidus sector */
+  } else {
+    nlon = norm360(SIGN0 + (hn - 1)*30 + 15);        /* whole-sign fallback: unchanged */
+  }
   var np = pt(nlon, R_HNUM);
   var t = el('text', { x:np.x, y:np.y + 11, 'font-size':'34', opacity:'0' }, numGroup);
   var tnum = document.createElementNS(NS, 'tspan');

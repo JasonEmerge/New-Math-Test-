@@ -736,7 +736,7 @@ console.log('[EMERGE FLOW] 5. tropical-reveal — system in storage:',
             SAVED && SAVED.system, '| data:', __ok ? 'user birth data' : 'QA fallback');
 console.log('[EMERGE FLOW] 6. calculation branch: TROPICAL — no ayanamsa (true tropical longitudes)');
 document.getElementById('stamp').textContent =
-  'TROPICAL v18.55 cusp overlay WORKING COPY · d1 · data:' + ((SAVED && SAVED.system) || 'none');
+  'TROPICAL v18.56 placidus math only · d1 · data:' + ((SAVED && SAVED.system) || 'none');
 
 var DEG = Math.PI/180, RAD = 180/Math.PI;
 
@@ -1325,14 +1325,14 @@ for (var hcu = 0; hcu < 12; hcu++){
 
 /* --- faint spokes to the center (like the template's light rays) --- */
 var R_CEN = 108;   // the center circle where the chart names itself
-/* v18.55 (Jason's direction): twelve house lines only, at the same weight as the wheel's
-   other spokes. Under Placidus the interior spokes ARE the twelve unequal cusps; the
-   equal whole-sign spokes draw only on Whole Sign fallback. The sign band, its equal
-   sector dividers, ticks and planet placement are untouched. No emphasized cross. */
+/* v18.56 (Jason's ruling): Placidus is CALCULATION ONLY. The wheel's visual is the
+   original v18.51 composition, byte for byte: equal spokes, equal sectors, numbers at
+   sector midpoints. The unequal cusps live in the math (g.house, readings, QA panel,
+   calculation trace) and are never drawn. */
 var spokeGroup = el('g', { stroke:'rgba(224,180,100,0.22)', 'stroke-width':'1.1' });
 var spokeEls = [];
 for (var sp = 0; sp < 12; sp++){
-  var slon = HOUSE_SYSTEM_USED === 'placidus' ? HOUSE_CUSPS[sp + 1] : norm360(SIGN0 + sp*30);
+  var slon = norm360(SIGN0 + sp*30);
   var sPt = pt(slon, R_TIN);
   var sPt0 = pt(slon, R_CEN);
   var se = el('line', { x1:sPt0.x, y1:sPt0.y, x2:sPt.x, y2:sPt.y }, spokeGroup);
@@ -1366,13 +1366,7 @@ var R_HNUM = 320;
 var numGroup = el('g', { 'font-family':'Georgia, serif', fill:'#d9a94f', 'text-anchor':'middle' });
 var numEls = [];
 for (var hn = 1; hn <= 12; hn++){
-  var nlon;
-  if (HOUSE_SYSTEM_USED === 'placidus'){
-    var na = HOUSE_CUSPS[hn], nb = HOUSE_CUSPS[hn % 12 + 1];
-    nlon = norm360(na + norm360(nb - na)/2);         /* v18.54: number sits inside its Placidus sector */
-  } else {
-    nlon = norm360(SIGN0 + (hn - 1)*30 + 15);        /* whole-sign fallback: unchanged */
-  }
+  var nlon = norm360(SIGN0 + (hn - 1)*30 + 15);      /* v18.56: original position, visual unchanged */
   var np = pt(nlon, R_HNUM);
   var t = el('text', { x:np.x, y:np.y + 11, 'font-size':'34', opacity:'0' }, numGroup);
   var tnum = document.createElementNS(NS, 'tspan');

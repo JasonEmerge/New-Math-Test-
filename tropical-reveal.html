@@ -736,7 +736,7 @@ console.log('[EMERGE FLOW] 5. tropical-reveal — system in storage:',
             SAVED && SAVED.system, '| data:', __ok ? 'user birth data' : 'QA fallback');
 console.log('[EMERGE FLOW] 6. calculation branch: TROPICAL — no ayanamsa (true tropical longitudes)');
 document.getElementById('stamp').textContent =
-  'TROPICAL v18.54 cusp overlay WORKING COPY · d1 · data:' + ((SAVED && SAVED.system) || 'none');
+  'TROPICAL v18.55 cusp overlay WORKING COPY · d1 · data:' + ((SAVED && SAVED.system) || 'none');
 
 var DEG = Math.PI/180, RAD = 180/Math.PI;
 
@@ -1323,41 +1323,16 @@ for (var hcu = 0; hcu < 12; hcu++){
   cuspEls.push({ e:le, len:ll });
 }
 
-/* --- v18.54 PLACIDUS CUSP OVERLAY (locked spec) ---
-   The zodiac ring and the twelve equal 30-degree sign sectors above are untouched.
-   When Placidus is active, the twelve unequal house cusps are overlaid as separate
-   radial lines inside the tick band (R_CEN to R_TIN, so they never cross the sign
-   dividers), the four angles (cusps 1, 4, 7, 10 = AC, IC, DC, MC) carry the heavier
-   existing gold + glow treatment, and the house numbers below are positioned at the
-   midpoint of their Placidus sector. On Whole Sign fallback nothing is added here:
-   the existing sector dividers ARE the house boundaries, exactly as before. */
-var R_CEN_OVERLAY = 108;
-if (HOUSE_SYSTEM_USED === 'placidus'){
-  var padGroup = el('g', { 'stroke-linecap':'round' });
-  for (var pc = 1; pc <= 12; pc++){
-    var isAngle = (pc === 1 || pc === 4 || pc === 7 || pc === 10);
-    var pl = HOUSE_CUSPS[pc];
-    var pp1 = pt(pl, R_CEN_OVERLAY), pp2 = pt(pl, isAngle ? R_RING : R_TIN);
-    var pe = el('line', {
-      x1:pp1.x, y1:pp1.y, x2:pp2.x, y2:pp2.y,
-      stroke: isAngle ? '#e8c67a' : '#e0b464',
-      'stroke-width': isAngle ? 3 : 1.5,
-      opacity: isAngle ? 0.95 : 0.6
-    }, padGroup);
-    if (isAngle) pe.setAttribute('filter', 'url(#gold)');
-    var plen = Math.hypot(pp2.x-pp1.x, pp2.y-pp1.y);
-    pe.style.strokeDasharray = plen;
-    pe.style.strokeDashoffset = plen;
-    cuspEls.push({ e:pe, len:plen });
-  }
-}
-
 /* --- faint spokes to the center (like the template's light rays) --- */
 var R_CEN = 108;   // the center circle where the chart names itself
+/* v18.55 (Jason's direction): twelve house lines only, at the same weight as the wheel's
+   other spokes. Under Placidus the interior spokes ARE the twelve unequal cusps; the
+   equal whole-sign spokes draw only on Whole Sign fallback. The sign band, its equal
+   sector dividers, ticks and planet placement are untouched. No emphasized cross. */
 var spokeGroup = el('g', { stroke:'rgba(224,180,100,0.22)', 'stroke-width':'1.1' });
 var spokeEls = [];
 for (var sp = 0; sp < 12; sp++){
-  var slon = norm360(SIGN0 + sp*30);
+  var slon = HOUSE_SYSTEM_USED === 'placidus' ? HOUSE_CUSPS[sp + 1] : norm360(SIGN0 + sp*30);
   var sPt = pt(slon, R_TIN);
   var sPt0 = pt(slon, R_CEN);
   var se = el('line', { x1:sPt0.x, y1:sPt0.y, x2:sPt.x, y2:sPt.y }, spokeGroup);

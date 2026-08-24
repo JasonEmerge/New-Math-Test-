@@ -728,15 +728,15 @@ var BIRTH = __ok ? {
   localLabel: (SAVED.birthDate || '') + ', ' + (SAVED.birthTime || ''),
   lat: __lat, lon: __lon, elev: 0
 } : {
-  utc: new Date(Date.UTC(1977, 7, 21, 1, 54, 0)),  // QA standard profile (validated)
-  localLabel: 'Aug 20 1977, 9:54 PM EDT',
-  lat: 43.1566, lon: -77.6088, elev: 0
+  utc: new Date('1990-01-01T17:00:00Z'),          // v18.53: synthetic, non-personal regression profile
+  localLabel: 'Jan 1 1990, 12:00 PM EST, New York (synthetic fixture)',
+  lat: 40.7128, lon: -74.0060, elev: 0
 };
 console.log('[EMERGE FLOW] 5. tropical-reveal — system in storage:',
             SAVED && SAVED.system, '| data:', __ok ? 'user birth data' : 'QA fallback');
 console.log('[EMERGE FLOW] 6. calculation branch: TROPICAL — no ayanamsa (true tropical longitudes)');
 document.getElementById('stamp').textContent =
-  'TROPICAL v18.52 placidus WORKING COPY · d1 · data:' + ((SAVED && SAVED.system) || 'none');
+  'TROPICAL v18.53 fixture+trace WORKING COPY · d1 · data:' + ((SAVED && SAVED.system) || 'none');
 
 var DEG = Math.PI/180, RAD = 180/Math.PI;
 
@@ -851,6 +851,22 @@ function houseOf(lon){
   return 12;
 }
 console.log('[EMERGE FLOW] 6b. houses:', HOUSE_SYSTEM_USED, HOUSE_FALLBACK_REASON || '', '| MC', MC.toFixed(4));
+/* ===== v18.53 CALCULATION REPRODUCIBILITY TRACE (tropical) ===== */
+try {
+  window.COZ_CALCULATION_TRACE = {
+    birth_utc: BIRTH.utc.toISOString(), birth_lat: BIRTH.lat, birth_lon: BIRTH.lon,
+    generated_at_timestamp: new Date().toISOString(),
+    engine_version: 'astronomy-engine@2.1.19',
+    methodology_version: 'cozalyze-method-2026.08.24 (tropical, Placidus primary, whole-sign fallback, mean node)',
+    zodiac: 'tropical', node_mode: 'mean',
+    house_system_requested: 'placidus', house_system_used: HOUSE_SYSTEM_USED,
+    fallback_reason: HOUSE_FALLBACK_REASON || null,
+    ascendant_deg: ASC, mc_deg: MC, ic_deg: IC, dsc_deg: DSC,
+    house_cusps_deg: HOUSE_SYSTEM_USED === 'placidus' ? HOUSE_CUSPS.slice(1) : null,
+    timezone_resolution: (SAVED && SAVED.timezoneResolution) ? SAVED.timezoneResolution : null
+  };
+  console.log('[EMERGE TRACE tropical-calc]', JSON.stringify(window.COZ_CALCULATION_TRACE));
+} catch(_){}
 
 function tropLonOf(body){
   var v = Astronomy.GeoVector(body, time, true);
@@ -2458,9 +2474,9 @@ function rpBirthDisplay(){
     out.place = [SAVED.location && SAVED.location.name,
                  SAVED.location && SAVED.location.country].filter(Boolean).join('<br>');
   } else {
-    /* mirrors the existing QA fallback profile only; placements stay computed */
-    out.date = 'August 20, 1977'; out.weekday = 'Saturday';
-    out.time = '9:54 PM'; out.place = 'Rochester, New York<br>USA';
+    /* v18.53: mirrors the synthetic fixture only; placements stay computed */
+    out.date = 'January 1, 1990'; out.weekday = 'Monday';
+    out.time = '12:00 PM'; out.place = 'New York, New York<br>USA';
   }
   var now = new Date();
   out.generated = RP_MONTHS[now.getMonth()] + ' ' + now.getDate() + ', ' + now.getFullYear();

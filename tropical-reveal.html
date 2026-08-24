@@ -736,7 +736,7 @@ console.log('[EMERGE FLOW] 5. tropical-reveal — system in storage:',
             SAVED && SAVED.system, '| data:', __ok ? 'user birth data' : 'QA fallback');
 console.log('[EMERGE FLOW] 6. calculation branch: TROPICAL — no ayanamsa (true tropical longitudes)');
 document.getElementById('stamp').textContent =
-  'TROPICAL v18.56 placidus math only · d1 · data:' + ((SAVED && SAVED.system) || 'none');
+  'TROPICAL v18.57 no crosshair · d1 · data:' + ((SAVED && SAVED.system) || 'none');
 
 var DEG = Math.PI/180, RAD = 180/Math.PI;
 
@@ -1282,7 +1282,9 @@ function pt(lonDeg, r){
 }
 
 /* --- crosshair axes (like the template: extend past the wheel) --- */
-var axisGroup = el('g', { stroke:'rgba(217,180,91,0.28)', 'stroke-width':'1.2' });
+/* v18.57 (Jason's ruling): the crosshair axes are removed from the visual entirely.
+   The group stays in the DOM hidden so every animation index below is untouched. */
+var axisGroup = el('g', { stroke:'rgba(217,180,91,0.28)', 'stroke-width':'1.2', display:'none' });
 var axisEls = [
   el('line', { x1:0,   y1:CY, x2:VB, y2:CY }, axisGroup),
   el('line', { x1:CX,  y1:0,  x2:CX, y2:VB }, axisGroup)

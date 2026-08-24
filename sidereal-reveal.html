@@ -519,23 +519,22 @@
      title block centered in the remaining width — then the reading full-width below. */
   .sd-asc { display:flex; flex-direction:column;
     gap:clamp(16px, 4.2vw, 30px); align-items:stretch; }
-  .sd-asc-head { display:grid; grid-template-columns:auto 1fr;
-    gap:clamp(12px, 3.4vw, 26px); align-items:center; }
-  .sd-asc-left { padding:2px 0; }
+  .sd-asc-head { position:relative; display:block; }
+  .sd-asc-left { position:absolute; left:0; top:50%; transform:translateY(-50%); }
   .sd-glyph-ring { width:clamp(64px, 17vw, 118px); aspect-ratio:1;
     border:2px solid #C2A481; border-radius:50%;
     display:flex; align-items:center; justify-content:center; margin:0; }
   .sd-glyph-ring img { width:60%; height:60%; object-fit:contain; }
   .sd-asc-label { font-family:'Cormorant Garamond', Georgia, serif;
-    color:#CCA466; font-size:clamp(12px, 3.2vw, 21px); letter-spacing:0.2em;
-    text-align:center; white-space:nowrap; }
+    color:#CCA466; font-size:clamp(15px, 4.2vw, 26px); letter-spacing:0.22em;
+    text-align:center; white-space:nowrap; }   /* v19.68: larger, centered on the card */
   .sd-asc-name { font-family:'Cormorant Garamond', Georgia, serif; font-weight:600;
-    font-size:clamp(25px, 7vw, 50px); letter-spacing:0.1em; text-align:center;
+    font-size:clamp(32px, 9vw, 60px); letter-spacing:0.1em; text-align:center;
     line-height:1.15;
     background:linear-gradient(180deg, #CCA466, #6D4706);
     -webkit-background-clip:text; background-clip:text; color:transparent; }
   .sd-asc-sub { font-family:-apple-system, "SF Pro Text", sans-serif;
-    font-size:clamp(8.5px, 2.3vw, 12px); letter-spacing:0.18em;
+    font-size:clamp(11px, 3vw, 15px); letter-spacing:0.2em;
     color:rgba(194,164,129,0.9); text-align:center; margin-top:6px; }
   .sd-asc-title { min-width:0; }
   /* v19.67 (mock match): the art sits at the top of the frame, full-bleed, its lower
@@ -545,8 +544,8 @@
     width:calc(100% + 2*clamp(12px, 3.5vw, 34px));
     margin:calc(-1*clamp(16px, 4vw, 32px)) calc(-1*clamp(12px, 3.5vw, 34px)) 0;
     max-width:none;
-    -webkit-mask-image:linear-gradient(180deg, #000 78%, transparent 100%);
-    mask-image:linear-gradient(180deg, #000 78%, transparent 100%); }
+    -webkit-mask-image:linear-gradient(180deg, #000 62%, transparent 90%);
+    mask-image:linear-gradient(180deg, #000 62%, transparent 90%); }   /* v19.68: bottom edge fully black, the art's lower frame line dissolved */
   .sd-asc-head { margin-top:clamp(14px, 4vw, 32px); }
   .sd-asc > .sd-body { margin-top:clamp(10px, 3vw, 24px); }
   .sd-asc > .sd-body { font-size:clamp(15.5px, 4.4vw, 21px); line-height:1.72;
@@ -901,7 +900,7 @@ var BIRTH = __ok ? {
 console.log('[EMERGE FLOW] 5. sidereal-reveal — system in storage:',
             SAVED && SAVED.system, '| data:', __ok ? 'user birth data' : 'QA fallback');
 document.getElementById('stamp').textContent =
-  'SIDEREAL v19.67 asc mock match · LAHIRI · d1 · data:' + ((SAVED && SAVED.system) || 'none');
+  'SIDEREAL v19.68 asc refinements · LAHIRI · d1 · data:' + ((SAVED && SAVED.system) || 'none');
 
 var DEG = Math.PI/180, RAD = 180/Math.PI;
 
@@ -1020,7 +1019,7 @@ var NODE_REGRESSION = (function(){
   var ref = F.deva_guru_sidereal_rahu_deg === null ? 'reference_pending'
           : { rahu_diff_deg: rs - F.deva_guru_sidereal_rahu_deg, ketu_diff_deg: ks - F.deva_guru_sidereal_ketu_deg, ayan_diff_deg: ay - F.deva_guru_ayanamsha_deg, recorded_at: F.deva_guru_recorded_at };
   var r = { pass: fails.length === 0, failed_fields: fails, computed: got, deva_guru_comparison: ref,
-            engine_method_version: 'astronomy-engine@2.1.19 | mean node 125.04452-0.05295377*(JD-2451545) | Lahiri cubic-2026.08 22.4881406+1.2025810T+0.2622463T^2-0.1101570T^3 | CozAlyze sidereal v19.67',
+            engine_method_version: 'astronomy-engine@2.1.19 | mean node 125.04452-0.05295377*(JD-2451545) | Lahiri cubic-2026.08 22.4881406+1.2025810T+0.2622463T^2-0.1101570T^3 | CozAlyze sidereal v19.68',
             calculated_at: new Date().toISOString() };
   console.log('[EMERGE FLOW] 6c. MEAN NODE REGRESSION ' + (r.pass ? 'PASS' : 'FAIL ' + fails.join(',')), r);
   return r;
@@ -3279,8 +3278,19 @@ function buildResultPage(){
   document.getElementById('sdPlanetsL').innerHTML = hl;
   document.getElementById('sdPlanetsR').innerHTML = hr;
 
-  document.getElementById('sdAscGlyph').src = 'sid-' + SD_GLYPH_FILE[ascSign] + '.png';
-  document.getElementById('sdAscGlyph').alt = SIGNS[ascSign];
+  (function(){   /* v19.68: text-glyph fallback so the ring is never empty if the icon asset is absent */
+    var gEl = document.getElementById('sdAscGlyph');
+    gEl.alt = SIGNS[ascSign];
+    gEl.onerror = function(){
+      var ring = gEl.parentNode; gEl.remove();
+      var ZG = ['\u2648','\u2649','\u264A','\u264B','\u264C','\u264D','\u264E','\u264F','\u2650','\u2651','\u2652','\u2653'];
+      var sp = document.createElement('span');
+      sp.textContent = ZG[ascSign];
+      sp.style.cssText = 'color:#C2A481;font-family:Georgia,serif;font-size:clamp(30px,8vw,54px);line-height:1;';
+      ring.appendChild(sp);
+    };
+    gEl.src = 'sid-' + SD_GLYPH_FILE[ascSign] + '.png';
+  })();
   document.getElementById('sdAscName').textContent = SIGNS[ascSign].toUpperCase();
   var n = Math.floor(ascSid/(360/27)), pd = Math.floor(ascSid/(360/108)) % 4 + 1;
   document.getElementById('sdAscSub').textContent = RP_NAK[n] + ' \u00B7 PADA ' + pd;

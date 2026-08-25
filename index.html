@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>CozAlyze</title>
+<style>
+html,body{margin:0;background:#01030a}
+img{display:block}
+/* DESKTOP: the dashboard art as-is */
+.desk{width:100%;max-width:1600px;margin:0 auto}
+.desk img{width:100%;height:auto}
+.mob{display:none}
+/* MOBILE: the same elements, stacked */
+@media (max-width:899px){
+ .desk{display:none}
+ .mob{display:block;padding:14px 16px calc(96px + env(safe-area-inset-bottom))}
+ .hdr{display:flex;justify-content:space-between;align-items:center}
+ .hdr .logo{height:44px;width:auto}
+ .hdr .right{height:40px;width:auto}
+ .headline{width:100%;margin-top:24px}
+ .card{width:100%;margin-top:14px}
+ .card:first-of-type{margin-top:24px}
+ .exp{width:100%;margin-top:40px}
+ .row{display:flex;gap:12px;overflow-x:auto;margin:14px -16px 0;padding:0 16px 6px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+ .row::-webkit-scrollbar{display:none}
+ .mini{flex:0 0 170px;width:170px;scroll-snap-align:start}
+ .tag{margin-top:26px;border:1px solid #8e8982;border-radius:10px;padding:18px 16px}
+ .tag img{width:100%}
+ .nav{position:fixed;left:16px;right:16px;bottom:calc(14px + env(safe-area-inset-bottom));height:66px;border:1px solid #6a655f;border-radius:10px;background:#01030a;display:flex;z-index:9}
+ .ni{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;text-decoration:none}
+ .ico{height:28px;width:auto} .lbl{height:20px;width:auto}
+}
+.stamp{position:fixed;right:8px;bottom:4px;font:10px/1 Georgia,serif;color:rgba(204,164,102,.45);z-index:10;pointer-events:none}
+</style></head><body>
+<div class="desk"><img src="dash-desktop.jpg" alt="CozAlyze dashboard"></div>
+<div class="mob">
+ <div class="hdr"><img class="logo" src="dash-logo.jpg" alt="CozAlyze"><img class="right" src="dash-header-right.jpg" alt="Saved Charts, Account"></div>
+ <img class="headline" src="dash-headline.jpg" alt="Discover Yourself Through Multiple Perspectives">
+ <img class="card" src="dash-card-tropical.jpg" alt="Tropical Astrology">
+ <img class="card" src="dash-card-vedic.jpg" alt="Vedic Astrology">
+ <img class="card" src="dash-card-compare.jpg" alt="Compare Perspectives">
+ <img class="exp" src="dash-expanding-heading.jpg" alt="Expanding Perspectives">
+ <div class="row"><img class="mini" src="dash-mini-chinese.jpg" alt=""><img class="mini" src="dash-mini-numerology.jpg" alt=""><img class="mini" src="dash-mini-genekeys.jpg" alt=""><img class="mini" src="dash-mini-daily.jpg" alt=""><img class="mini" src="dash-mini-yearly.jpg" alt=""></div>
+ <div class="tag"><img src="dash-tagline-text.jpg" alt="Different systems. Different insights. One you. CozAlyze helps you to see it all."></div>
+ <nav class="nav"><a class="ni" href="#"><img class="ico" src="dash-ico-home.jpg" alt=""><img class="lbl" src="dash-lbl-home.jpg" alt="home"></a><a class="ni" href="#"><img class="ico" src="dash-ico-mychart.jpg" alt=""><img class="lbl" src="dash-lbl-mychart.jpg" alt="mychart"></a><a class="ni" href="#"><img class="ico" src="dash-ico-explore.jpg" alt=""><img class="lbl" src="dash-lbl-explore.jpg" alt="explore"></a><a class="ni" href="#"><img class="ico" src="dash-ico-saved.jpg" alt=""><img class="lbl" src="dash-lbl-saved.jpg" alt="saved"></a><a class="ni" href="#"><img class="ico" src="dash-ico-account.jpg" alt=""><img class="lbl" src="dash-lbl-account.jpg" alt="account"></a></nav>
+</div>
+<div class="stamp">DASHBOARD · M1.2 final art</div>
+</body></html>
